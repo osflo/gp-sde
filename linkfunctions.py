@@ -1,6 +1,8 @@
 import torch
 from torch import nn
 
+#Functions of the module class 
+#All contains the computation of the function and its derivative
 
 class Exp(nn.Module):
     """
