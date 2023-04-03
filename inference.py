@@ -1,7 +1,7 @@
 import torch
 from utils import linInterp, batch_make_diag
 from settings import float_type, var_init
-
+import time 
 
 class GaussMarkovLagrange(object):
     def __init__(self, nLatent, trLen, dtstep=0.001, learningRate=0.9, parallel=0):
@@ -34,7 +34,10 @@ class GaussMarkovLagrange(object):
         # timepts are the time points corresponding to the discretisation
 
         # get cost function gradients at given discretization
+        time0=time.time()
         dEdm, dEdS = self.get_KullbackLeibler_grad(model, m, S, idx)
+        timekull=time.time()
+        print('time backward kull '+str(timekull-time0))
 
         # set final condition
         Psi_new = torch.zeros_like(self.Psi[idx]).type(float_type)  # T x D x D
@@ -44,6 +47,7 @@ class GaussMarkovLagrange(object):
         # mask contains ones on the diagonal, ones off the diagonal.
         symmetryMask = 0.5 * torch.ones(self.nLatent, self.nLatent).type(float_type) + 0.5 * torch.eye(self.nLatent, self.nLatent).type(float_type)
 
+        time0b=time.time()
         # integrate backwards using Forward Euler method with reversed time grid
         T = Psi_new.shape[0]
         for tt in range(T - 1, 0, -1):  # goes from 1 to T-1 for indexing
@@ -55,6 +59,8 @@ class GaussMarkovLagrange(object):
                                                                        dLdm[tt, :, :]) - dLdm_jump[tt - 1, :, :]
         Psi_new = 0.5 * (Psi_new + Psi_new.transpose(-2, -1))  # enforce symmetry for stability
 
+        print('Time backard Euler'+str(time.time()-time0b))
+        
         # update stored values at grid points
         self.Psi[idx] = Psi_new[:]
         self.eta[idx] = eta_new[:]
@@ -201,13 +207,23 @@ class GaussMarkovLagrange(object):
     def run_inference_single(self, model, idx):
         # run variational inference for a single trial
 
+        time0=time.time()
+
         m, S = self.solveForward_GaussMarkov_grid(self.initialMean[idx], self.initialCov[idx], idx)
+        timeforward=time.time()
+        print('timeforward'+str((timeforward-time0)))
 
         dLdm, dLdm_jump, dLdS, dLdS_jump = self.get_ExpectedLogLike_grad(model, m, S, idx)
+        timegrad=time.time()
+        print('time grad'+str(timegrad-timeforward))
 
         self.solveBackward_LagrangeMultipliers(model, m, S, dLdm, dLdm_jump, dLdS, dLdS_jump, idx)
+        timebackward=time.time()
+        print('time backward'+str(timebackward-timegrad))
 
         convergence_flag = self.update_GaussMarkov(model, m, S, idx)
+        timeupdate=time.time()
+        print('time update infer'+str(timeupdate-timebackward))
 
         return convergence_flag
 
