@@ -136,8 +136,9 @@ def det_keepdim(A):
 
 
 def logdet(M):
-    # L = torch.potrf(M, upper=False)
-    L = torch.cholesky(M)
+    #L = torch.potrf(M, upper=False)
+    M=M+1e-3 #trying to make spd
+    L = torch.linalg.cholesky(M)
     return 2 * torch.diag(L).log().sum().unsqueeze(-1).unsqueeze(-1)  # no collapse
 
 
