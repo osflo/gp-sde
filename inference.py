@@ -34,11 +34,8 @@ class GaussMarkovLagrange(object):
         # timepts are the time points corresponding to the discretisation
 
         # get cost function gradients at given discretization
-        time0=time.time()
         dEdm, dEdS = self.get_KullbackLeibler_grad(model, m, S, idx)
-        timekull=time.time()
-        print('time backward kull '+str(timekull-time0))
-
+    
         # set final condition
         Psi_new = torch.zeros_like(self.Psi[idx]).type(float_type)  # T x D x D
         eta_new = torch.zeros_like(self.eta[idx]).type(float_type)  # T x 1 x D
@@ -47,7 +44,6 @@ class GaussMarkovLagrange(object):
         # mask contains ones on the diagonal, ones off the diagonal.
         symmetryMask = 0.5 * torch.ones(self.nLatent, self.nLatent).type(float_type) + 0.5 * torch.eye(self.nLatent, self.nLatent).type(float_type)
 
-        time0b=time.time()
         # integrate backwards using Forward Euler method with reversed time grid
         T = Psi_new.shape[0]
         for tt in range(T - 1, 0, -1):  # goes from 1 to T-1 for indexing
@@ -59,7 +55,6 @@ class GaussMarkovLagrange(object):
                                                                        dLdm[tt, :, :]) - dLdm_jump[tt - 1, :, :]
         Psi_new = 0.5 * (Psi_new + Psi_new.transpose(-2, -1))  # enforce symmetry for stability
 
-        print('Time backard Euler'+str(time.time()-time0b))
         
         # update stored values at grid points
         self.Psi[idx] = Psi_new[:]
@@ -69,7 +64,6 @@ class GaussMarkovLagrange(object):
         # gradients for Kullback leibler divergence
         # gradients wrt m are (R x 1 x 1) x (1 x K)
         with torch.no_grad():
-            time0=time.time()
             dEdm_grid = 0.5 * model.transfunc.dffdm(m, S) \
                 - (model.transfunc.dfdm(m, S) * (self.b_grid[idx].unsqueeze(-1).unsqueeze(-1))).sum(2, keepdim=True) \
                 + m.matmul(self.A_grid[idx].transpose(-1, -2)).matmul(self.A_grid[idx]).unsqueeze(1).unsqueeze(1) \
@@ -77,8 +71,6 @@ class GaussMarkovLagrange(object):
                 + model.transfunc.f(m, S).matmul(self.A_grid[idx]).unsqueeze(1).unsqueeze(1) \
                 + (model.transfunc.dfdm(m, S) * m.matmul(self.A_grid[idx].transpose(-1, -2)).unsqueeze(-1).unsqueeze(-1)).sum(2, keepdim=True) \
                 + (model.transfunc.ddfdxdm(m, S) * self.A_grid[idx].matmul(S).unsqueeze(-1).unsqueeze(-1)).sum(1, keepdim=True).sum(2, keepdim=True)
-            time1=time.time()
-            print("backward time 1 : "+str(time1-time0))
 
             # gradients wrt S are  (R x 1 x 1) x (K x K)
             # part of gradient that is already symmetrised (since grads come from transition function, which expects proper gradients)
@@ -86,17 +78,14 @@ class GaussMarkovLagrange(object):
                 - (model.transfunc.dfdS(m, S) * (self.b_grid[idx].unsqueeze(-1).unsqueeze(-1))).sum(2, keepdim=True) \
                 + (model.transfunc.dfdS(m, S) * m.matmul(self.A_grid[idx].transpose(-1, -2)).unsqueeze(-1).unsqueeze(-1)).sum(2, keepdim=True) \
                 + (model.transfunc.ddfdxdS(m, S) * self.A_grid[idx].matmul(S).unsqueeze(-1).unsqueeze(-1)).sum(1, keepdim=True).sum(2, keepdim=True)
-            time2=time.time()
-            print("backward time 2 : "+str(time2-time1))
+            
 
             dEdS_grid_asym = self.A_grid[idx].transpose(-1, -2).matmul(model.transfunc.dfdx(m, S)).unsqueeze(1).unsqueeze(1) \
                 + 0.5 * self.A_grid[idx].transpose(-1, -2).matmul(self.A_grid[idx]).unsqueeze(1).unsqueeze(1)
-            time3=time.time()
-            print("backward time 3 : "+str(time3-time2))
+            
 
             dEdS_grid = dEdS_grid_sym + dEdS_grid_asym + dEdS_grid_asym.transpose(-2, -1) - batch_make_diag(dEdS_grid_asym)  # account for symmetry in S
-            time4=time.time()
-            print("backward time 4 : "+str(time4-time3))
+            
         # return more compact representation of gradients
         return dEdm_grid.squeeze(1).squeeze(1), dEdS_grid.squeeze(1).squeeze(1)
 
@@ -215,23 +204,13 @@ class GaussMarkovLagrange(object):
     def run_inference_single(self, model, idx):
         # run variational inference for a single trial
 
-        time0=time.time()
-
         m, S = self.solveForward_GaussMarkov_grid(self.initialMean[idx], self.initialCov[idx], idx)
-        timeforward=time.time()
-        print('timeforward'+str((timeforward-time0)))
 
         dLdm, dLdm_jump, dLdS, dLdS_jump = self.get_ExpectedLogLike_grad(model, m, S, idx)
-        timegrad=time.time()
-        print('time grad'+str(timegrad-timeforward))
 
         self.solveBackward_LagrangeMultipliers(model, m, S, dLdm, dLdm_jump, dLdS, dLdS_jump, idx)
-        timebackward=time.time()
-        print('time backward'+str(timebackward-timegrad))
 
         convergence_flag = self.update_GaussMarkov(model, m, S, idx)
-        timeupdate=time.time()
-        print('time update infer'+str(timeupdate-timebackward))
 
         return convergence_flag
 
