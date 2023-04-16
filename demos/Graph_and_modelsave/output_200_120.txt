@@ -1,0 +1,50 @@
+c:\Users\fosmo\OneDrive\Documents\GitHub\gp-sde\demos\..\kernels.py:320: UserWarning: torch.solve is deprecated in favor of torch.linalg.solveand will be removed in a future PyTorch release.
+torch.linalg.solve has its arguments reversed and does not return the LU factorization.
+To get the LU factorization see torch.lu, which can be used with torch.lu_solve or torch.lu_unpack.
+X = torch.solve(B, A).solution
+should be replaced with
+X = torch.linalg.solve(A, B) (Triggered internally at  ..\aten\src\ATen\native\BatchLinearAlgebra.cpp:766.)
+  scaled_diffs, _ = torch.solve(mu_x2_new_diffs.transpose(-1, -2), lengthscales_new_squared.unsqueeze(-3))
+inference time=387.6136167049408
+learning time=147.45729279518127
+update time0.0
+-------------------------------------------------------
+iter   objective    log-like      kl-div     f-prior
+-------------------------------------------------------
+   0   -7473.288    8699.892    1144.295     -82.308
+inference time=1317.7654588222504
+learning time=216.18857049942017
+update time0.0
+   1  -25613.687   26872.813    1189.081     -70.044
+inference time=2330.437653541565
+learning time=208.03424787521362
+update time0.0
+   2  -34892.858   36209.432    1261.619     -54.956
+inference time=3309.1287302970886
+learning time=209.659654378891
+update time0.0
+   3  -36701.770   38058.414    1308.402     -48.242
+inference time=4294.237854719162
+learning time=207.8819763660431
+update time0.0
+   4  -37232.920   38537.293    1253.477     -50.896
+inference time=5274.4871945381165
+learning time=211.33505725860596
+update time0.0
+   5  -37613.211   38868.313    1201.745     -53.358
+inference time=6254.516276597977
+learning time=213.06115460395813
+update time0.0
+   6  -38042.579   39294.831    1196.277     -55.975
+inference time=7217.567443609238
+learning time=201.8333613872528
+update time0.0
+   7  -38547.137   39830.724    1223.935     -59.652
+inference time=8200.036650896072
+learning time=209.26517295837402
+update time0.0
+   8  -38915.502   40230.226    1243.366     -71.358
+inference time=9157.531576633453
+learning time=217.89667296409607
+update time0.0
+   9  -39185.901   40485.610    1220.075     -79.634
