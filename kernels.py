@@ -8,7 +8,7 @@ class StationaryKernel(nn.Module):
     def __init__(self):
         super(StationaryKernel, self).__init__()
 
-        self.output_scale = nn.Parameter(torch.ones(1).type(float_type))
+        self.output_scale = nn.Parameter(torch.ones(1).type(float_type)) #get rid of parameter
 
     def paired_diff(self, x1, x2):
         """
@@ -187,7 +187,7 @@ class RBF(StationaryKernel):
     def __init__(self, num_dims, lengthscales_Init=None):
         super(RBF, self).__init__()
         if lengthscales_Init is None:
-            self.lengthscales = nn.Parameter(torch.ones(num_dims, 1).type(float_type))  # D x 1
+            self.lengthscales = nn.Parameter(torch.ones(num_dims, 1).type(float_type))  # D x 1 
         else:
             self.lengthscales = nn.Parameter(lengthscales_Init.view(num_dims, 1).type(float_type))  # D x 1
         # self.lengthscales = nn.Parameter(torch.rand(num_dims, 1) + 0.5)  # D x 1
