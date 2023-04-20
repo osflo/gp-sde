@@ -2,6 +2,7 @@ import torch
 from settings import float_type
 from copy import deepcopy
 import itertools
+from settings import var_init
 
 
 def get_points_on_grid(xdim, nperdim, xmin, xmax):
@@ -137,7 +138,11 @@ def det_keepdim(A):
 
 def logdet(M):
     #L = torch.potrf(M, upper=False)
-    M=M+5e-3 #trying to make spd
+    #M=M+5e-3 #trying to make spd
+    if torch.isnan(M).any():
+        M=torch.nan_to_num(M,nan=var_init) #trying to remove the mistake, need to be change
+        print("nan value")
+        
     L = torch.linalg.cholesky(M)
     return 2 * torch.diag(L).log().sum().unsqueeze(-1).unsqueeze(-1)  # no collapse
 
@@ -425,6 +430,8 @@ def train_model(model, inputs, maxiter=100):
 
     optimizer = torch.optim.LBFGS(filter(lambda p: p.requires_grad, model.parameters()), max_iter=maxiter)
     # Forward pass: Compute predicted mean and varince by passing input to the model
+    torch.save(model,'model_for_error/model_after_learning.pt')
+    torch.save(model.transfunc,'model_for_error/transf_after_learning.pt')
     ell, kld, prior_trans, prior_map = model(*inputs)
     loss = neg_variational_free_energy(ell, kld, prior_trans, prior_map)
 
