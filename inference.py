@@ -16,8 +16,8 @@ class GaussMarkovLagrange(object):
         self.Psi = [torch.zeros(int(trLen[i] / dtstep), self.nLatent, self.nLatent).type(float_type) for i in range(self.nTrials)]  # T x K x K
         self.eta = [torch.zeros(int(trLen[i] / dtstep), 1, self.nLatent).type(float_type) for i in range(self.nTrials)]  # T x 1 x K
         self.dtstep = dtstep  # step size for inference discretization
-        self.learningRate = learningRate  # learning rate for Agrid, bgrid updates
-        self.convergenceTol = 1e-04
+        self.learningRate = learningRate  # learning rate for Agrid, bgrid updates 
+        self.convergenceTol = 1e-04 
         self.initialiseVariational()
 
     def initialiseVariational(self):
@@ -143,12 +143,22 @@ class GaussMarkovLagrange(object):
         S_grid[0, :, :] = S0[:]
 
         # Forward Euler to solver ODEs
+        nanhere=False
         for tt in range(T - 1):
             m_grid[tt + 1, :, :] = m_grid[tt, :, :] - self.dtstep * (torch.matmul(m_grid[tt, :, :], self.A_grid[idx][tt, :, :].transpose(-2, -1)) - self.b_grid[idx][tt, :, :])
 
             S_grid[tt + 1, :, :] = S_grid[tt, :, :] - self.dtstep * (torch.matmul(self.A_grid[idx][tt, :, :], S_grid[tt, :, :]) +
                                                                      torch.matmul(S_grid[tt, :, :], self.A_grid[idx][tt, :, :].transpose(-2, -1)) -
                                                                      torch.eye(self.nLatent).type(float_type).unsqueeze(0))
+            
+            if torch.isinf(S_grid[tt+1,:,:]).any() and not(nanhere):
+                print("step :"+str(tt))
+                print("old "+str(S_grid[tt,:,:]))
+                print("A_grid "+str(self.A_grid[idx][tt, :, :]))
+                print("self.nLatent "+str(self.nLatent))
+                print("new "+str(S_grid[tt+1,:,:]))
+                nanhere=True
+
         # symmetrize solution to improve numerical stability
         S_grid = 0.5 * (S_grid + S_grid.transpose(-2, -1))
 
