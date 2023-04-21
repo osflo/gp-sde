@@ -430,8 +430,8 @@ def train_model(model, inputs, maxiter=100):
 
     optimizer = torch.optim.LBFGS(filter(lambda p: p.requires_grad, model.parameters()), max_iter=maxiter)
     # Forward pass: Compute predicted mean and varince by passing input to the model
-    torch.save(model,'model_for_error/model_after_learning.pt')
-    torch.save(model.transfunc,'model_for_error/transf_after_learning.pt')
+    #torch.save(model,'model_for_error/model_after_learning.pt')
+    #torch.save(model.transfunc,'model_for_error/transf_after_learning.pt')
     ell, kld, prior_trans, prior_map = model(*inputs)
     loss = neg_variational_free_energy(ell, kld, prior_trans, prior_map)
 

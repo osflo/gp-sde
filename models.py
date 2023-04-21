@@ -49,7 +49,7 @@ class GPSDE(object):
             final_ell, final_kld, final_prior_trans, _ = self.learning_update(mStepIter)
             time2=time.time()
             print('learning time='+str(time2-time1))
-            torch.save(self.model,'model_for_error/model_1_iteration.pt')
+            #torch.save(self.model,'model_for_error/model_1_iteration.pt')
 
             # update initial state of latent
             self.initialState_update()
@@ -69,8 +69,8 @@ class GPSDE(object):
 
         # perforn closed form updates of transition function parmeters
         self.model.closedFormUpdates(*inputs)
-        torch.save(self.model,'model_for_error/model_after_closed_form_update.pt')
-        torch.save(self.model.transfunc,'model_for_error/transf_after_closed_form_update.pt')
+        #torch.save(self.model,'model_for_error/model_after_closed_form_update.pt')
+        #torch.save(self.model.transfunc,'model_for_error/transf_after_closed_form_update.pt')
         # train model parameters
         final_ell, final_kld, final_prior_trans, final_prior_map = train_model(self.model, inputs, niterM)
         # refresh any values that are stored throughout inference but updated during learning

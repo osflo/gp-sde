@@ -291,7 +291,7 @@ class SparseGP(TransitionFunction):
         # closed form update for inducing point distribution
         if self.useClosedForm:
             with torch.no_grad():
-                print(self.Zs)
+                #print(self.Zs)
                 # get matrices we need
                 Kzz = self.get_Kzz()  # 1 x M x M
                 Kzxxz = self.get_E_Kzxxz(mq, Sq)  # V x R x M x M
@@ -333,11 +333,11 @@ class SparseGP(TransitionFunction):
             # don't include as parameters if closed form updating
             self.q_mu = mean_init * torch.ones(self.numZ, self.xDim).type(float_type)  # M x K posterior mean
             self.q_sigma = var_init * torch.ones(self.numZ, self.xDim).type(float_type)  # M x K diagonal posterior standard deviation
-            print("initialise qsigma closed")
+           # print("initialise qsigma closed")
         else:
             self.q_mu = nn.Parameter(mean_init * torch.ones(self.numZ, self.xDim).type(float_type))  # M x K posterior mean
             self.q_sigma = nn.Parameter(var_init * torch.ones(self.numZ, self.xDim).type(float_type))  # M x K diagonal posterior standard deviation
-            print("qsigma is a para ")
+           # print("qsigma is a para ")
 
     def get_Kzz(self):
         Kzz = self.kern(mode="k", x1=self.Zs.unsqueeze(0), x2=self.Zs.unsqueeze(0))
