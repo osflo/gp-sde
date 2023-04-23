@@ -8,8 +8,8 @@ class StationaryKernel(nn.Module):
     def __init__(self):
         super(StationaryKernel, self).__init__()
 
-        self.output_scale = nn.Parameter(torch.ones(1).type(float_type)) #get rid of parameter
-        #self.output_scale = torch.ones(1).type(float_type)
+        #self.output_scale = nn.Parameter(torch.ones(1).type(float_type)) #get rid of parameter
+        self.output_scale = torch.ones(1).type(float_type)
 
     def paired_diff(self, x1, x2):
         """
