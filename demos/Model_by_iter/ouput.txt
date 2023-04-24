@@ -1,0 +1,66 @@
+Notation as other would be 200_120_241125_50_5_16iter
+
+inference time=486.3274118900299
+learning time=218.60640954971313
+update time0.0
+-------------------------------------------------------
+iter   objective    log-like      kl-div     f-prior
+-------------------------------------------------------
+   0    7346.181   -5361.181    1878.769    -106.231
+inference time=1494.6192417144775
+learning time=217.3635437488556
+update time0.0
+   1  -12035.608   14345.612    2275.251     -34.752
+inference time=2506.690020084381
+learning time=217.55741024017334
+update time0.0
+   2  -30122.307   32337.132    2019.467    -195.357
+inference time=3519.918748140335
+learning time=216.97784113883972
+update time0.0
+   3  -32713.049   35022.699    2151.235    -158.415
+inference time=4531.784695625305
+learning time=215.33774852752686
+update time0.0
+   4  -33770.955   35987.025    2091.580    -124.490
+inference time=5544.61298251152
+learning time=214.38996505737305
+update time0.0
+   5  -34405.523   36497.710    1993.477     -98.710
+inference time=6555.741492509842
+learning time=217.3040223121643
+update time0.0
+   6  -34876.646   36849.570    1891.894     -81.030
+inference time=7570.084876775742
+learning time=217.16344952583313
+update time0.0
+   7  -35260.130   37121.302    1791.945     -69.227
+inference time=8574.820576667786
+learning time=215.51357316970825
+update time0.0
+   8  -35622.380   37379.857    1695.764     -61.712
+inference time=9576.63107252121
+learning time=220.01942348480225
+update time0.0
+   9  -36050.772   37714.194    1605.874     -57.548
+inference time=10597.700889110565
+learning time=217.52873992919922
+update time0.0
+  10  -36707.881   38291.187    1527.131     -56.174
+inference time=11598.404743671417
+learning time=213.73554134368896
+update time0.0
+  11  -37428.175   38975.044    1489.853     -57.017
+inference time=12602.778255224228
+learning time=219.52528524398804
+update time0.0
+  12  -37835.853   39391.235    1497.640     -57.741
+inference time=13642.721014738083
+learning time=229.7882900238037
+update time0.0
+  13  -38058.989   39628.064    1510.845     -58.231
+inference time=14834.767401456833
+learning time=245.8640558719635
+update time0.0010004043579101562
+  14  -38215.501   39783.491    1509.465     -58.525
+inference time=16107.249651193619

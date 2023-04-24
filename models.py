@@ -3,6 +3,7 @@ from torch import nn
 from modules import KullbackLeibler
 from settings import var_init, float_type
 from utils import train_model
+import pickle
 
 import time
 # ------- Outer SDE model class containing training, plotting, prediction attributes --------
@@ -58,6 +59,13 @@ class GPSDE(object):
             
             # print some output and store cost function values
             self.callback(i, final_ell, final_kld, final_prior_trans)
+            
+            torch.save(self.model,'Model_by_iter/model_'+str(i)+'.pt')
+            with open('Model_by_iter/inference_'+str(i)+'.pt','wb') as file:
+                pickle.dump(self.inference,file)
+
+            with open('Model_by_iter/all_'+str(i)+'.pt','wb') as file:
+                pickle.dump(self,file)
 
         # final inference pass
         self.inference_update(eStepIter)
