@@ -168,6 +168,7 @@ class GaussMarkovLagrange(object):
         # function to evaluate GP at new points for trial idx
         # solve for m, S on grid
         m, S = self.solveForward_GaussMarkov_grid(self.initialMean[idx], self.initialCov[idx], idx)
+        # m correspond to the value that is plot at point t and S the variance around it
 
         # interpolate points off grid
         T = t.size()[0]
@@ -193,8 +194,8 @@ class GaussMarkovLagrange(object):
     def update_GaussMarkov(self, model, m, S, idx):
         # update A(t), b(t) lambda functions
         with torch.no_grad():
-            A_grid_new = - model.transfunc.dfdx(m, S) + 2 * self.Psi[idx]
-            b_grid_new = model.transfunc.f(m, S) + m.matmul(A_grid_new.transpose(-2, -1)) - self.eta[idx]
+            A_grid_new = - model.transfunc.dfdx(m, S) + 2 * self.Psi[idx] #eq 21
+            b_grid_new = model.transfunc.f(m, S) + m.matmul(A_grid_new.transpose(-2, -1)) - self.eta[idx] #eq 22
 
         # compute criterion for convergence
         A_diff_sq_norm = ((self.A_grid[idx] - A_grid_new)**2).sum()
