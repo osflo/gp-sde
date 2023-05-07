@@ -60,12 +60,12 @@ class GPSDE(object):
             # print some output and store cost function values
             self.callback(i, final_ell, final_kld, final_prior_trans)
             
-            torch.save(self.model,'Model_by_iter/model_'+str(i)+'.pt')
-            with open('Model_by_iter/inference_'+str(i)+'.pt','wb') as file:
-                pickle.dump(self.inference,file)
+            #torch.save(self.model,'Model_by_iter/model_'+str(i)+'.pt')
+            #with open('Model_by_iter/inference_'+str(i)+'.pt','wb') as file:
+            #    pickle.dump(self.inference,file)
 
-            with open('Model_by_iter/all_'+str(i)+'.pt','wb') as file:
-                pickle.dump(self,file)
+            #with open('Model_by_iter/all_'+str(i)+'.pt','wb') as file:
+              #  pickle.dump(self,file)
 
         # final inference pass
         self.inference_update(eStepIter)
