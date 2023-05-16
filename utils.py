@@ -386,9 +386,12 @@ def bin_sparseData(Y, tObs, Tmax, dtstep):
     # tobs is list of sample times
     nbins = int(Tmax / dtstep)
     nDims = Y.size(-1)
-    obsMask = torch.histc(tObs, bins=nbins, min=0, max=Tmax).type(torch.ByteTensor)
+    #obsMask = torch.histc(tObs, bins=nbins, min=0, max=Tmax).type(torch.ByteTensor)
+    obsMask = torch.histc(tObs, bins=nbins).type(torch.ByteTensor) #changed to try making it work
     Ybin = torch.zeros(nbins, nDims).type(float_type)
-    Ybin[obsMask.unsqueeze(-1).expand(Ybin.size())] = Y.view(-1)
+    sh=Ybin[obsMask.unsqueeze(-1).expand(Ybin.size())].size()
+    #Ybin[obsMask.unsqueeze(-1).expand(Ybin.size())] = Y.view(-1)
+    Ybin[obsMask.unsqueeze(-1).expand(Ybin.size())] = Y.reshape(sh) #changed to try making it work
     return Ybin
 
 
