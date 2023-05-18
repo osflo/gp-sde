@@ -44,18 +44,18 @@ class GPSDE(object):
             # run inference across all trials
             self.inference_update(eStepIter)
             time1=time.time()
-            print("inference time="+str(time1-time0))
+           # print("inference time="+str(time1-time0))
 
             # run learning of transferfunction and other model parameters, hyperparameters
             final_ell, final_kld, final_prior_trans, _ = self.learning_update(mStepIter)
             time2=time.time()
-            print('learning time='+str(time2-time1))
+            #print('learning time='+str(time2-time1))
             #torch.save(self.model,'model_for_error/model_1_iteration.pt')
 
             # update initial state of latent
             self.initialState_update()
             time3=time.time()
-            print("update time"+str(time3-time2))
+           # print("update time"+str(time3-time2))
             
             # print some output and store cost function values
             self.callback(i, final_ell, final_kld, final_prior_trans)
