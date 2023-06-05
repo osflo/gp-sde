@@ -6,10 +6,10 @@ The code is still under active development and is expected to change substantial
 
 ## Getting started
 * ./demos contains examples on how to use the code
- * Real Spike trains is a notebook to create a model from data
- * Spike_Neuron_Use_model look at a model and use it to generate new data
- * The two Tutorial notebook are from the main reference and create a model on artificial data
- * The folder Ancient_or_not_used contains diverse notebook created during the project but without conclusion or are outdated
+    * Real Spike trains is a notebook to create a model from data
+    * Spike_Neuron_Use_model look at a model and use it to generate new data
+    * The two Tutorial notebook are from the main reference and create a model on artificial data
+    * The folder Ancient_or_not_used contains diverse notebook created during the project but without conclusion or are outdated
 
 * ./Data contains the data that we used, some functions to get it and a notebook to do some data analysis
 
