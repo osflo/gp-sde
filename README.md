@@ -5,13 +5,13 @@ This repository contains code to perform variational inference over the path of 
 The code is still under active development and is expected to change substantially in the future. We include implementations for Gaussian observation models and linear mappings from latents to observations here, and are planning to release a revised code distribution in the future.
 
 ## Getting started
-*./demos contains examples on how to use the code
- *Real Spike trains is a notebook to create a model from data
- *Spike_Neuron_Use_model look at a model and use it to generate new data
- *The two Tutorial notebook are from the main reference and create a model on artificial data
- *The folder Ancient_or_not_used contains diverse notebook created during the project but without conclusion or are outdated
+* ./demos contains examples on how to use the code
+ * Real Spike trains is a notebook to create a model from data
+ * Spike_Neuron_Use_model look at a model and use it to generate new data
+ * The two Tutorial notebook are from the main reference and create a model on artificial data
+ * The folder Ancient_or_not_used contains diverse notebook created during the project but without conclusion or are outdated
 
-*./Data contains the data that we used, some functions to get it and a notebook to do some data analysis
+* ./Data contains the data that we used, some functions to get it and a notebook to do some data analysis
 
 ## References
 The main reference for this work is
